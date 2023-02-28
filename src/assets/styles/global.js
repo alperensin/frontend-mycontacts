@@ -1,7 +1,7 @@
 import { createGlobalStyle, css } from 'styled-components';
 
 export default createGlobalStyle`
-  ${({ theme: { backgroundColor } }) => css`
+  ${({ theme: { colors: { background } } }) => css`
     * {
       margin: 0;
       padding: 0;
@@ -10,7 +10,7 @@ export default createGlobalStyle`
     }
 
     body {
-      background: ${backgroundColor};
+      background: ${background};
       font-size: 16px;
     }
 
