@@ -2,6 +2,8 @@ import styled, { css } from 'styled-components';
 
 export const Container = styled.header`
   ${({ theme: { colors: { primary } } }) => css`
+    margin-bottom: 24px;
+
     a {
       text-decoration: none;
       display: flex;
