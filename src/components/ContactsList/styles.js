@@ -33,3 +33,25 @@ export const Header = styled.header`
     }
   `}
 `;
+
+export const ListContainer = styled.div`
+
+  ${({ theme: { colors: { primary } } }) => css`
+    margin-top: 24px;
+
+    header {
+      button {
+        background: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+
+        span {
+          color: ${primary.main};
+          margin-right: 8px;
+        }
+      }
+    }
+  `}
+
+`;
