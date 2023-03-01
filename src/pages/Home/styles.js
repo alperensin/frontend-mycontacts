@@ -124,12 +124,12 @@ export const Card = styled.div`
         margin-left: 8px;
 
         &:hover {
-          opacity: 0.75;
+          opacity: 0.80;
         }
       }
 
       a:hover {
-        opacity: 0.75;
+        opacity: 0.80;
       }
 
     }
