@@ -1,11 +1,23 @@
 import styled, { css } from 'styled-components';
 
+const dangerModifier = ({ theme: { colors }, danger }) => danger && css`
+  background: ${colors.danger.main};
+
+  &:hover {
+      background: ${colors.danger.light};
+    }
+
+    &:active {
+      background: ${colors.danger.dark};
+    }
+`;
+
 export default styled.button`
-  ${({ theme: { colors: { primary } } }) => css`
+  ${({ theme, danger }) => css`
     height: 52px;
     border: none;
     padding: 0 16px;
-    background: ${primary.main} ;
+    background: ${theme.colors.primary.main} ;
     font-size: 16px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.04);
     font-weight: bold;
@@ -14,16 +26,18 @@ export default styled.button`
     transition: background 0.2s ease-in;
 
     &:hover {
-      background: ${primary.light};
+      background: ${theme.colors.primary.light};
     }
 
     &:active {
-      background: ${primary.dark};
+      background: ${theme.colors.primary.dark};
     }
 
     &[disabled] {
       background: #CCC;
       cursor: default;
     }
+
+    ${dangerModifier({ theme, danger })}
   `}
 `;

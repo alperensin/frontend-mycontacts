@@ -15,20 +15,23 @@ export const Overlay = styled.div`
 `;
 
 export const Container = styled.div`
-  max-width: 450px;
-  width: 100%;
-  background: #FFFFFF;
-  border-radius: 4px;
-  padding: 24px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.04);
+  ${({ theme: { colors }, danger }) => css`
+    max-width: 450px;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 4px;
+    padding: 24px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.04);
 
-  h1 {
-    font-size: 22px;
-  }
+    h1 {
+      font-size: 22px;
+      color: ${danger ? colors.danger.main : colors.gray[900]}
+    }
 
-  p {
-    margin-top: 8px;
-  }
+    p {
+      margin-top: 8px;
+    }
+  `}
 `;
 
 export const Footer = styled.footer`
