@@ -1,7 +1,12 @@
 import styled, { css } from 'styled-components';
 
+const errorModifier = ({ theme: { colors }, error }) => error && css`
+  color: ${colors.danger.main};
+  border-color: ${colors.danger.main} !important;
+`;
+
 export default styled.input`
-  ${({ theme: { colors: { primary } } }) => css`
+  ${({ theme, error }) => css`
     width: 100%;
     background: #FFF;
     border: 2px solid #FFF;
@@ -14,7 +19,9 @@ export default styled.input`
     transition: border-color 0.2s ease-in;
 
     &:focus {
-      border: 2px solid ${primary.main};
+      border: 2px solid ${theme.colors.primary.main};
     }
+
+    ${errorModifier({ theme, error })}
   `}
 `;
