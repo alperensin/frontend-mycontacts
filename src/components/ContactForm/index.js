@@ -62,13 +62,13 @@ export default function ContactForm({ buttonLabel }) {
   const emailError = getErrorMessageByFieldName(EMAIL_FIELD);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form noValidate onSubmit={handleSubmit}>
       <FormGroup error={nameError}>
         <Input name={NAME_FIELD} type="text" placeholder="Nome" value={name} onChange={handleNameChange} error={nameError} />
       </FormGroup>
 
       <FormGroup error={emailError}>
-        <Input name={EMAIL_FIELD} type="text" placeholder="E-mail" value={email} onChange={handleEmailChange} error={emailError} />
+        <Input name={EMAIL_FIELD} type="email" placeholder="E-mail" value={email} onChange={handleEmailChange} error={emailError} />
       </FormGroup>
 
       <FormGroup>
