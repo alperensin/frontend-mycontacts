@@ -5,6 +5,7 @@ import Select from '../Select';
 import Button from '../Button';
 import FormGroup from '../FormGroup';
 import isEmailValid from '../../utils/isEmailValid';
+import useErrors from '../../hooks/useErrors';
 import { ButtonContainer } from './styles';
 
 const NAME_FIELD = 'name';
@@ -16,48 +17,33 @@ export default function ContactForm({ buttonLabel }) {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [category, setCategory] = useState('');
-  const [errors, setErrors] = useState([]);
+
+  const { setError, removeError, getErrorMessageByFieldName } = useErrors();
 
   function handleNameChange(event) {
-    setName(event.target.value);
-
-    const fieldName = event.target.name;
+    const { value, name: field } = event.target;
     const message = 'Nome é obrigatório.';
 
-    if (!event.target.value) {
-      setErrors((prevState) => [
-        ...prevState,
-        { field: fieldName, message },
-      ]);
+    setName(value);
+
+    if (!value) {
+      setError({ field, message });
     } else {
-      setErrors((prevState) => prevState.filter((error) => error.field !== fieldName));
+      removeError(field);
     }
   }
 
   function handleEmailChange(event) {
-    setEmail(event.target.value);
-
-    const fieldName = event.target.name;
+    const { value, name: field } = event.target;
     const message = 'E-mail inválido.';
 
-    if (event.target.value && !isEmailValid(event.target.value)) {
-      const errorAlreadyExists = errors.find((error) => error.field === fieldName);
+    setEmail(value);
 
-      if (errorAlreadyExists) {
-        return;
-      }
-
-      setErrors((prevState) => [
-        ...prevState,
-        { field: fieldName, message },
-      ]);
+    if (value && !isEmailValid(value)) {
+      setError({ field, message });
     } else {
-      setErrors((prevState) => prevState.filter((error) => error.field !== fieldName));
+      removeError(field);
     }
-  }
-
-  function getErrorMessageByFieldName(fieldName) {
-    return errors.find(({ field }) => field === fieldName)?.message;
   }
 
   function handlePhoneChange(e) {
