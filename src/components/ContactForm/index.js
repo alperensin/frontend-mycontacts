@@ -5,6 +5,7 @@ import Select from '../Select';
 import Button from '../Button';
 import FormGroup from '../FormGroup';
 import isEmailValid from '../../utils/isEmailValid';
+import formatPhone from '../../utils/formatPhone';
 import useErrors from '../../hooks/useErrors';
 import { ButtonContainer } from './styles';
 
@@ -47,7 +48,10 @@ export default function ContactForm({ buttonLabel }) {
   }
 
   function handlePhoneChange(e) {
-    setPhone(e.target.value);
+    const { value } = e.target;
+    const phoneNumberFormatted = formatPhone(value);
+
+    setPhone(phoneNumberFormatted);
   }
 
   function handleCategoryChange(e) {
@@ -72,7 +76,7 @@ export default function ContactForm({ buttonLabel }) {
       </FormGroup>
 
       <FormGroup>
-        <Input name={PHONE_FIELD} type="text" placeholder="Telefone" value={phone} onChange={handlePhoneChange} />
+        <Input name={PHONE_FIELD} type="text" placeholder="Telefone" maxLength={15} value={phone} onChange={handlePhoneChange} />
       </FormGroup>
 
       <FormGroup>
