@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Container, InputSearchContainer, Header, ListContainer, Card,
 } from './styles';
+import formatPhone from '../../utils/formatPhone';
 
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
@@ -32,7 +33,9 @@ export default function Home() {
 
       <Header>
         <strong>
-          3 contatos
+          {contacts.length}
+          {' '}
+          {contacts.length === 1 ? 'contato' : 'contatos'}
         </strong>
         <Link to="/new">Novo contato</Link>
       </Header>
@@ -45,25 +48,29 @@ export default function Home() {
           </button>
         </header>
 
-        <Card>
-          <div className="info">
-            <div className="contact-name">
-              <strong>André Luiz</strong>
-              <small>instagram</small>
+        {contacts.map(({
+          id, name, category_name: categoryName, email, phone,
+        }) => (
+          <Card key={id}>
+            <div className="info">
+              <div className="contact-name">
+                <strong>{name}</strong>
+                {categoryName && <small>{categoryName}</small>}
+              </div>
+              <span>{email}</span>
+              <span>{formatPhone(phone)}</span>
             </div>
-            <span>alperensin@gmail.com</span>
-            <span>(43) 99999-9999</span>
-          </div>
 
-          <div className="actions">
-            <Link to="/edit/1">
-              <img src={edit} alt="Edit" />
-            </Link>
-            <button type="button">
-              <img src={trash} alt="Delete" />
-            </button>
-          </div>
-        </Card>
+            <div className="actions">
+              <Link to={`/edit/${id}`}>
+                <img src={edit} alt="Edit" />
+              </Link>
+              <button type="button">
+                <img src={trash} alt="Delete" />
+              </button>
+            </div>
+          </Card>
+        ))}
       </ListContainer>
     </Container>
   );
