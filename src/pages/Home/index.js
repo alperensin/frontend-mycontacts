@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Container, InputSearchContainer, Header, ListContainer, Card,
+  Container, InputSearchContainer, Header, ListHeader, Card,
 } from './styles';
 import formatPhone from '../../utils/formatPhone';
 
@@ -11,9 +11,10 @@ import trash from '../../assets/images/icons/trash.svg';
 
 export default function Home() {
   const [contacts, setContacts] = useState([]);
+  const [orderBy, setOrderBy] = useState('asc');
 
   useEffect(() => {
-    fetch('http://localhost:3001/contacts', {
+    fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`, {
       method: 'GET',
     })
       .then(async (response) => {
@@ -23,7 +24,11 @@ export default function Home() {
       .catch(() => {
         // Error
       });
-  }, []);
+  }, [orderBy]);
+
+  function handleToggleOrderBy() {
+    setOrderBy((prevState) => (prevState === 'asc' ? 'desc' : 'asc'));
+  }
 
   return (
     <Container>
@@ -40,38 +45,36 @@ export default function Home() {
         <Link to="/new">Novo contato</Link>
       </Header>
 
-      <ListContainer>
-        <header>
-          <button type="button">
-            <span>Nome</span>
-            <img src={arrow} alt="Arrow" />
-          </button>
-        </header>
+      <ListHeader orderBy={orderBy}>
+        <button type="button" onClick={handleToggleOrderBy}>
+          <span>Nome</span>
+          <img src={arrow} alt="Arrow" />
+        </button>
+      </ListHeader>
 
-        {contacts.map(({
-          id, name, category_name: categoryName, email, phone,
-        }) => (
-          <Card key={id}>
-            <div className="info">
-              <div className="contact-name">
-                <strong>{name}</strong>
-                {categoryName && <small>{categoryName}</small>}
-              </div>
-              <span>{email}</span>
-              <span>{formatPhone(phone)}</span>
+      {contacts.map(({
+        id, name, category_name: categoryName, email, phone,
+      }) => (
+        <Card key={id}>
+          <div className="info">
+            <div className="contact-name">
+              <strong>{name}</strong>
+              {categoryName && <small>{categoryName}</small>}
             </div>
+            <span>{email}</span>
+            <span>{formatPhone(phone)}</span>
+          </div>
 
-            <div className="actions">
-              <Link to={`/edit/${id}`}>
-                <img src={edit} alt="Edit" />
-              </Link>
-              <button type="button">
-                <img src={trash} alt="Delete" />
-              </button>
-            </div>
-          </Card>
-        ))}
-      </ListContainer>
+          <div className="actions">
+            <Link to={`/edit/${id}`}>
+              <img src={edit} alt="Edit" />
+            </Link>
+            <button type="button">
+              <img src={trash} alt="Delete" />
+            </button>
+          </div>
+        </Card>
+      ))}
     </Container>
   );
 }
