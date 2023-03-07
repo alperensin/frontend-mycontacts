@@ -23,9 +23,8 @@ export default function Home() {
   )), [contacts, searchTerm]);
 
   useEffect(() => {
-    setIsLoading(true);
-
     async function loadContacts() {
+      setIsLoading(true);
       try {
         const contactsList = await ContactsService.listContacts(orderBy);
         setContacts(contactsList);
