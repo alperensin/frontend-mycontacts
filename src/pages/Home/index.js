@@ -4,6 +4,7 @@ import {
   Container, InputSearchContainer, Header, ListHeader, Card,
 } from './styles';
 import formatPhone from '../../utils/formatPhone';
+import Loader from '../../components/Loader';
 
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
@@ -13,13 +14,15 @@ export default function Home() {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const filteredContacts = useMemo(() => contacts.filter((contact) => (
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
   )), [contacts, searchTerm]);
 
   useEffect(() => {
-    fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`, {
+    setIsLoading(true);
+    fetch(`http://192.168.50.102:3001/contacts?orderBy=${orderBy}`, {
       method: 'GET',
     })
       .then(async (response) => {
@@ -28,6 +31,9 @@ export default function Home() {
       })
       .catch(() => {
         // Error
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [orderBy]);
 
@@ -42,6 +48,8 @@ export default function Home() {
 
   return (
     <Container>
+      <Loader isLoading={isLoading} />
+
       <InputSearchContainer>
         <input value={searchTerm} onChange={handleChangeSearchTerm} type="text" placeholder="Pesquise pelo nome..." />
       </InputSearchContainer>
