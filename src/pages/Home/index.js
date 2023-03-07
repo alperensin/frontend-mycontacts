@@ -10,6 +10,8 @@ import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
 
+import ContactsService from '../../services/ContactsService';
+
 export default function Home() {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
@@ -25,9 +27,8 @@ export default function Home() {
 
     async function loadContacts() {
       try {
-        const response = await fetch(`http://192.168.50.102:3001/contacts?orderBy=${orderBy}`);
-        const json = await response.json();
-        setContacts(json || []);
+        const contactsList = await ContactsService.listContacts(orderBy);
+        setContacts(contactsList);
       } catch (error) {
         // Error
       } finally {
