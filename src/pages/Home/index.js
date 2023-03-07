@@ -22,19 +22,20 @@ export default function Home() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://192.168.50.102:3001/contacts?orderBy=${orderBy}`, {
-      method: 'GET',
-    })
-      .then(async (response) => {
+
+    async function loadContacts() {
+      try {
+        const response = await fetch(`http://192.168.50.102:3001/contacts?orderBy=${orderBy}`);
         const json = await response.json();
         setContacts(json || []);
-      })
-      .catch(() => {
+      } catch (error) {
         // Error
-      })
-      .finally(() => {
+      } finally {
         setIsLoading(false);
-      });
+      }
+    }
+
+    loadContacts();
   }, [orderBy]);
 
   function handleChangeSearchTerm(event) {
