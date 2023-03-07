@@ -25,20 +25,21 @@ export default function Home() {
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
   )), [contacts, searchTerm]);
 
-  useEffect(() => {
-    async function loadContacts() {
-      try {
-        setIsLoading(true);
-        const contactsList = await ContactsService.listContacts(orderBy);
-        setContacts([] || contactsList);
-        throw new Error('Erro');
-      } catch {
-        setHasError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+  async function loadContacts() {
+    try {
+      setIsLoading(true);
+      const contactsList = await ContactsService.listContacts(orderBy);
 
+      setHasError(false);
+      setContacts(contactsList);
+    } catch {
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
     loadContacts();
   }, [orderBy]);
 
@@ -49,6 +50,10 @@ export default function Home() {
 
   function handleToggleOrderBy() {
     setOrderBy((prevState) => (prevState === 'asc' ? 'desc' : 'asc'));
+  }
+
+  function handleTryAgain() {
+    loadContacts();
   }
 
   return (
@@ -75,46 +80,50 @@ export default function Home() {
           <img src={sad} alt="Sad" />
           <div className="details">
             <strong>Ocorreu um erro ao obter os seus contatos!</strong>
-            <Button type="button">Tentar novamente</Button>
+            <Button type="button" onClick={handleTryAgain}>Tentar novamente</Button>
           </div>
         </ErrorContainer>
       )}
 
-      {
-        filteredContacts.length > 0
-        && (
-        <ListHeader orderBy={orderBy}>
-          <button type="button" onClick={handleToggleOrderBy}>
-            <span>Nome</span>
-            <img src={arrow} alt="Arrow" />
-          </button>
-        </ListHeader>
-        )
-      }
+      {!hasError && (
+        <>
+          {
+            filteredContacts.length > 0
+            && (
+            <ListHeader orderBy={orderBy}>
+              <button type="button" onClick={handleToggleOrderBy}>
+                <span>Nome</span>
+                <img src={arrow} alt="Arrow" />
+              </button>
+            </ListHeader>
+            )
+          }
 
-      {filteredContacts.map(({
-        id, name, category_name: categoryName, email, phone,
-      }) => (
-        <Card key={id}>
-          <div className="info">
-            <div className="contact-name">
-              <strong>{name}</strong>
-              {categoryName && <small>{categoryName}</small>}
-            </div>
-            <span>{email}</span>
-            <span>{formatPhone(phone)}</span>
-          </div>
+          {filteredContacts.map(({
+            id, name, category_name: categoryName, email, phone,
+          }) => (
+            <Card key={id}>
+              <div className="info">
+                <div className="contact-name">
+                  <strong>{name}</strong>
+                  {categoryName && <small>{categoryName}</small>}
+                </div>
+                <span>{email}</span>
+                <span>{formatPhone(phone)}</span>
+              </div>
 
-          <div className="actions">
-            <Link to={`/edit/${id}`}>
-              <img src={edit} alt="Edit" />
-            </Link>
-            <button type="button">
-              <img src={trash} alt="Delete" />
-            </button>
-          </div>
-        </Card>
-      ))}
+              <div className="actions">
+                <Link to={`/edit/${id}`}>
+                  <img src={edit} alt="Edit" />
+                </Link>
+                <button type="button">
+                  <img src={trash} alt="Delete" />
+                </button>
+              </div>
+            </Card>
+          ))}
+        </>
+      )}
     </Container>
   );
 }
