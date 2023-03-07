@@ -26,11 +26,13 @@ export const InputSearchContainer = styled.form`
 `;
 
 export const Header = styled.header`
-  ${({ theme: { colors: { primary } } }) => css`
+  ${({ theme: { colors: { primary, gray } }, hasError }) => css`
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: ${hasError ? 'flex-end' : 'space-between'};
     margin-top: 32px;
+    border-bottom: 2px solid ${gray[100]};
+    padding-bottom: 16px;
 
     strong {
       font-size: 24px;
@@ -137,5 +139,25 @@ export const Card = styled.div`
 
     }
 
+  `}
+`;
+
+export const ErrorContainer = styled.div`
+  ${({ theme: { colors: { danger } } }) => css`
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+
+    .details {
+      margin-left: 24px;
+
+      strong {
+        font-size: 22px;
+        color: ${danger.main};
+        display: block;
+        margin-bottom: 8px;
+      }
+
+    }
   `}
 `;
