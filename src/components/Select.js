@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 export default styled.select`
-  ${({ theme: { colors: { primary } } }) => css`
+  ${({ theme: { colors: { primary, gray } } }) => css`
     width: 100%;
     background: #FFF;
     border: 2px solid #FFF;
@@ -16,6 +16,11 @@ export default styled.select`
 
     &:focus {
       border: 2px solid ${primary.main};
+    }
+
+    &[disabled] {
+      background-color: ${gray[100]};
+      border-color: ${gray[200]};
     }
   `}
 `;
