@@ -23,6 +23,11 @@ export default styled.input`
       border: 2px solid ${theme.colors.primary.main};
     }
 
+    &[disabled] {
+      background-color: ${theme.colors.gray[100]};
+      border-color: ${theme.colors.gray[200]};
+    }
+
     ${errorModifier({ theme, error })}
   `}
 `;
