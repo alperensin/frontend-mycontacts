@@ -14,7 +14,7 @@ const NAME_FIELD = 'name';
 const EMAIL_FIELD = 'email';
 const PHONE_FIELD = 'phone';
 
-export default function ContactForm({ buttonLabel }) {
+export default function ContactForm({ buttonLabel, onSubmit }) {
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -80,6 +80,10 @@ export default function ContactForm({ buttonLabel }) {
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    onSubmit({
+      name, email, phone, categoryId,
+    });
   }
 
   const nameError = getErrorMessageByFieldName(NAME_FIELD);
@@ -119,4 +123,5 @@ export default function ContactForm({ buttonLabel }) {
 
 ContactForm.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
