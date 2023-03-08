@@ -1,9 +1,11 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable no-nested-ternary */
 import {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Container, InputSearchContainer, Header, ListHeader, Card, ErrorContainer,
+  Container, InputSearchContainer, Header, ListHeader, Card, ErrorContainer, EmptyListContainer,
 } from './styles';
 import formatPhone from '../../utils/formatPhone';
 import Loader from '../../components/Loader';
@@ -13,6 +15,7 @@ import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
 import sad from '../../assets/images/sad.svg';
+import emptyBox from '../../assets/images/empty-box.svg';
 
 import ContactsService from '../../services/ContactsService';
 
@@ -62,12 +65,27 @@ export default function Home() {
     <Container>
       <Loader isLoading={isLoading} />
 
-      <InputSearchContainer>
-        <input value={searchTerm} onChange={handleChangeSearchTerm} type="text" placeholder="Pesquise pelo nome..." />
-      </InputSearchContainer>
+      {
+        contacts.length > 0
+        && (
+          <InputSearchContainer>
+            <input value={searchTerm} onChange={handleChangeSearchTerm} type="text" placeholder="Pesquise pelo nome..." />
+          </InputSearchContainer>
+        )
+      }
 
-      <Header hasError={hasError}>
-        {!hasError && (
+      <Header
+        justifyContent={
+          hasError
+            ? 'flex-end'
+            : (
+              contacts.length > 0
+                ? 'space-between'
+                : 'center'
+            )
+        }
+      >
+        {(!hasError && contacts.length > 0) && (
           <strong>
             {filteredContacts.length}
             {' '}
@@ -89,6 +107,19 @@ export default function Home() {
 
       {!hasError && (
         <>
+          {
+            (contacts.length < 1 && !isLoading) && (
+              <EmptyListContainer>
+                <img src={emptyBox} alt="Empty Box" />
+                <p>
+                  Você ainda não tem nenhum contato cadastrado!
+                  Clique no botão <strong>”Novo contato”</strong> à cima
+                  para cadastrar o seu primeiro!
+                </p>
+              </EmptyListContainer>
+            )
+          }
+
           {
             filteredContacts.length > 0
             && (

@@ -26,10 +26,10 @@ export const InputSearchContainer = styled.form`
 `;
 
 export const Header = styled.header`
-  ${({ theme: { colors: { primary, gray } }, hasError }) => css`
+  ${({ theme: { colors: { primary, gray } }, justifyContent }) => css`
     display: flex;
     align-items: center;
-    justify-content: ${hasError ? 'flex-end' : 'space-between'};
+    justify-content: ${justifyContent};
     margin-top: 32px;
     border-bottom: 2px solid ${gray[100]};
     padding-bottom: 16px;
@@ -158,6 +158,25 @@ export const ErrorContainer = styled.div`
         margin-bottom: 8px;
       }
 
+    }
+  `}
+`;
+
+export const EmptyListContainer = styled.div`
+  ${({ theme: { colors: { gray, primary } } }) => css`
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    p {
+      margin-top: 8px;
+      text-align: center;
+      color: ${gray[200]};
+
+      strong {
+        color: ${primary.main}
+      }
     }
   `}
 `;
