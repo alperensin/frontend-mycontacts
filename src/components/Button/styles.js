@@ -12,7 +12,7 @@ const dangerModifier = ({ theme: { colors }, danger }) => danger && css`
     }
 `;
 
-export default styled.button`
+export const StyledButton = styled.button`
   ${({ theme, danger }) => css`
     height: 52px;
     border: none;
@@ -24,6 +24,9 @@ export default styled.button`
     color: #FFFFFF;
     border-radius: 4px;
     transition: background 0.2s ease-in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover {
       background: ${theme.colors.primary.light};
