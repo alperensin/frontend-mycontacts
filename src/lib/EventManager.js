@@ -12,12 +12,27 @@ export default class EventManager {
   }
 
   emit(event, payload) {
-    if (!this.listeners[event]) {
+    const listeners = this.listeners[event];
+
+    if (!listeners) {
       return;
     }
 
-    this.listeners[event].forEach((listener) => {
+    listeners.forEach((listener) => {
       listener(payload);
     });
+  }
+
+  removeListener(event, listenerToRemove) {
+    const listeners = this.listeners[event];
+    if (!listeners) {
+      return;
+    }
+
+    const filteredListeners = listeners.filter((listener) => (
+      listener !== listenerToRemove
+    ));
+
+    this.listeners = filteredListeners;
   }
 }
