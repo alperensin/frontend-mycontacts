@@ -25,7 +25,7 @@ export default function ToastMessage({
   }
 
   return (
-    <Container type={message.type} onClick={handleRemoveToast}>
+    <Container type={message.type} onClick={handleRemoveToast} tabIndex={0} role="button">
       {(icon !== null) && <img src={icon} alt={`${message.type} icon`} />}
       <strong>{message.text}</strong>
     </Container>
