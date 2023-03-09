@@ -89,6 +89,10 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
     });
 
     setIsSubmitting(false);
+    setName('');
+    setEmail('');
+    setPhone('');
+    setCategoryId('');
   }
 
   const nameError = getErrorMessageByFieldName(NAME_FIELD);
