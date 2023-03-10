@@ -17,6 +17,7 @@ import {
 import formatPhone from '../../utils/formatPhone';
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
+import Modal from '../../components/Modal';
 
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
@@ -33,6 +34,8 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [contactBeingDeleted, setContactBeingDeleted] = useState(null);
 
   const filteredContacts = useMemo(() => contacts.filter((contact) => (
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -69,9 +72,36 @@ export default function Home() {
     loadContacts();
   }
 
+  function handleDeleteContact(contact) {
+    setContactBeingDeleted(contact);
+    setIsDeleteModalVisible(true);
+  }
+
+  function handleCloseDeleteModal() {
+    setContactBeingDeleted(null);
+    setIsDeleteModalVisible(false);
+  }
+
+  function handleConfirmDeleteContact() {
+    console.log(contactBeingDeleted.id);
+  }
+
   return (
     <Container>
       <Loader isLoading={isLoading} />
+
+      <Modal
+        danger
+        title={`Tem certeza que deseja remover o contato "${contactBeingDeleted?.name}"?`}
+        confirmLabel="Deletar"
+        onCancel={handleCloseDeleteModal}
+        onConfirm={handleConfirmDeleteContact}
+        visible={isDeleteModalVisible}
+      >
+        <p>
+          Esta ação nao poderá ser desfeita!
+        </p>
+      </Modal>
 
       {
         contacts.length > 0
@@ -151,24 +181,22 @@ export default function Home() {
             )
           }
 
-          {filteredContacts.map(({
-            id, name, category_name: categoryName, email, phone,
-          }) => (
-            <Card key={id}>
+          {filteredContacts.map((contact) => (
+            <Card key={contact.id}>
               <div className="info">
                 <div className="contact-name">
-                  <strong>{name}</strong>
-                  {categoryName && <small>{categoryName}</small>}
+                  <strong>{contact.name}</strong>
+                  {contact.category_name && <small>{contact.category_name}</small>}
                 </div>
-                <span>{email}</span>
-                <span>{formatPhone(phone)}</span>
+                <span>{contact.email}</span>
+                <span>{formatPhone(contact.phone)}</span>
               </div>
 
               <div className="actions">
-                <Link to={`/edit/${id}`}>
+                <Link to={`/edit/${contact.id}`}>
                   <img src={edit} alt="Edit" />
                 </Link>
-                <button type="button">
+                <button type="button" onClick={() => handleDeleteContact(contact)}>
                   <img src={trash} alt="Delete" />
                 </button>
               </div>
