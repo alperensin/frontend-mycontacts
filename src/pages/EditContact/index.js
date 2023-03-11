@@ -36,17 +36,9 @@ export default function EditContact() {
     loadContact();
   }, [id, history, safeAsyncAction]);
 
-  async function handleSubmit(formData) {
+  async function handleSubmit(contact) {
     try {
-      const contact = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        category_id: formData.categoryId,
-      };
-
       const contactData = await ContactsService.updateContact(id, contact);
-
       contactFormRef.current.setFieldsValues(contactData);
       setContactName(contactData.name);
       toast({ type: 'success', text: 'Contato editado com sucesso!' });
