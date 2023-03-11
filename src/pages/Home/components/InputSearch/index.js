@@ -1,11 +1,7 @@
 import PropTypes from 'prop-types';
 import { Container } from './styles';
 
-export default function InputSearch({ value, onChange, isVisible }) {
-  if (!isVisible) {
-    return null;
-  }
-
+export default function InputSearch({ value, onChange }) {
   return (
     <Container>
       <input value={value} onChange={onChange} type="text" placeholder="Pesquise pelo nome..." />
@@ -16,9 +12,4 @@ export default function InputSearch({ value, onChange, isVisible }) {
 InputSearch.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  isVisible: PropTypes.bool,
-};
-
-InputSearch.defaultProps = {
-  isVisible: false,
 };

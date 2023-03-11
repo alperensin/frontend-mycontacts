@@ -4,11 +4,7 @@ import { Container } from './styles';
 
 import sad from '../../../../assets/images/sad.svg';
 
-export default function ErrorStatus({ onTryAgain, isVisible }) {
-  if (!isVisible) {
-    return null;
-  }
-
+export default function ErrorStatus({ onTryAgain }) {
   return (
     <Container>
       <img src={sad} alt="Sad" />
@@ -22,9 +18,4 @@ export default function ErrorStatus({ onTryAgain, isVisible }) {
 
 ErrorStatus.propTypes = {
   onTryAgain: PropTypes.func.isRequired,
-  isVisible: PropTypes.bool,
-};
-
-ErrorStatus.defaultProps = {
-  isVisible: false,
 };
