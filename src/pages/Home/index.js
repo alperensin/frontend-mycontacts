@@ -27,6 +27,7 @@ import emptyBox from '../../assets/images/empty-box.svg';
 import magnifierQuestion from '../../assets/images/magnifier-question.svg';
 
 import ContactsService from '../../services/ContactsService';
+import toast from '../../utils/toast';
 
 export default function Home() {
   const [contacts, setContacts] = useState([]);
@@ -36,6 +37,7 @@ export default function Home() {
   const [hasError, setHasError] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [contactBeingDeleted, setContactBeingDeleted] = useState(null);
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
 
   const filteredContacts = useMemo(() => contacts.filter((contact) => (
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -82,8 +84,29 @@ export default function Home() {
     setIsDeleteModalVisible(false);
   }
 
-  function handleConfirmDeleteContact() {
-    console.log(contactBeingDeleted.id);
+  async function handleConfirmDeleteContact() {
+    try {
+      setIsLoadingDelete(true);
+      await ContactsService.deleteContact(contactBeingDeleted.id);
+
+      toast({
+        type: 'success',
+        text: 'Contato deletado com sucesso!',
+      });
+
+      setContacts((prevState) => prevState.filter(
+        (contact) => contact.id !== contactBeingDeleted.id,
+      ));
+
+      handleCloseDeleteModal();
+    } catch {
+      toast({
+        type: 'danger',
+        text: 'Ocorreu um erro ao deletar contato',
+      });
+    } finally {
+      setIsLoadingDelete(false);
+    }
   }
 
   return (
@@ -97,6 +120,7 @@ export default function Home() {
         onCancel={handleCloseDeleteModal}
         onConfirm={handleConfirmDeleteContact}
         visible={isDeleteModalVisible}
+        isLoading={isLoadingDelete}
       >
         <p>
           Esta ação nao poderá ser desfeita!
