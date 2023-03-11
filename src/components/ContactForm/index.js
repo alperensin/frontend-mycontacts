@@ -1,133 +1,45 @@
 import {
-  forwardRef, useEffect, useImperativeHandle, useState,
+  forwardRef,
 } from 'react';
 import PropTypes from 'prop-types';
 import Input from '../Input';
 import Select from '../Select';
 import Button from '../Button';
 import FormGroup from '../FormGroup';
-import isEmailValid from '../../utils/isEmailValid';
-import formatPhone from '../../utils/formatPhone';
-import useErrors from '../../hooks/useErrors';
+import useContactForm from './useContactForm';
 import { ButtonContainer } from './styles';
-import CategoriesService from '../../services/CategoriesService';
-import useSafeAsyncState from '../../hooks/useSafeAsyncState';
-
-const NAME_FIELD = 'name';
-const EMAIL_FIELD = 'email';
-const PHONE_FIELD = 'phone';
 
 const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
-  const [categories, setCategories] = useSafeAsyncState([]);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  const [isLoadingCategories, setIsLoadingCategories] = useSafeAsyncState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const {
-    setError, removeError, getErrorMessageByFieldName, errors,
-  } = useErrors();
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      setFieldsValues: (contact) => {
-        setName(contact.name ?? '');
-        setEmail(contact.email ?? '');
-        setPhone(formatPhone(contact.phone ?? ''));
-        setCategoryId(contact.category.id ?? '');
-      },
-      resetFields: () => {
-        setName('');
-        setEmail('');
-        setPhone('');
-        setCategoryId('');
-      },
-    }),
-    [],
-  );
-
-  const isFormValid = (name && errors.length === 0);
-
-  useEffect(() => {
-    async function loadCategories() {
-      try {
-        const categoriesList = await CategoriesService.listCategories();
-        setCategories(categoriesList);
-      } catch {} finally {
-        setIsLoadingCategories(false);
-      }
-    }
-
-    loadCategories();
-  }, [setCategories, setIsLoadingCategories]);
-
-  function handleNameChange(event) {
-    const { value, name: field } = event.target;
-    const message = 'Nome é obrigatório.';
-
-    setName(value);
-
-    if (!value) {
-      setError({ field, message });
-    } else {
-      removeError(field);
-    }
-  }
-
-  function handleEmailChange(event) {
-    const { value, name: field } = event.target;
-    const message = 'E-mail inválido.';
-
-    setEmail(value);
-
-    if (value && !isEmailValid(value)) {
-      setError({ field, message });
-    } else {
-      removeError(field);
-    }
-  }
-
-  function handlePhoneChange(e) {
-    const { value } = e.target;
-    const phoneNumberFormatted = formatPhone(value);
-
-    setPhone(phoneNumberFormatted);
-  }
-
-  function handleCategoryChange(e) {
-    setCategoryId(e.target.value);
-  }
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-
-    setIsSubmitting(true);
-
-    await onSubmit({
-      name, email, phone, categoryId,
-    });
-
-    setIsSubmitting(false);
-  }
-
-  const nameError = getErrorMessageByFieldName(NAME_FIELD);
-  const emailError = getErrorMessageByFieldName(EMAIL_FIELD);
+    name,
+    email,
+    phone,
+    categoryId,
+    categories,
+    nameError,
+    emailError,
+    isSubmitting,
+    isFormValid,
+    isLoadingCategories,
+    handleSubmit,
+    handleNameChange,
+    handleEmailChange,
+    handlePhoneChange,
+    handleCategoryChange,
+  } = useContactForm(onSubmit, ref);
 
   return (
     <form noValidate onSubmit={handleSubmit}>
       <FormGroup error={nameError}>
-        <Input name={NAME_FIELD} type="text" placeholder="Nome *" value={name} onChange={handleNameChange} error={nameError} disabled={isSubmitting} />
+        <Input name="name" type="text" placeholder="Nome *" value={name} onChange={handleNameChange} error={nameError} disabled={isSubmitting} />
       </FormGroup>
 
       <FormGroup error={emailError}>
-        <Input name={EMAIL_FIELD} type="email" placeholder="E-mail" value={email} onChange={handleEmailChange} error={emailError} disabled={isSubmitting} />
+        <Input name="email" type="email" placeholder="E-mail" value={email} onChange={handleEmailChange} error={emailError} disabled={isSubmitting} />
       </FormGroup>
 
       <FormGroup>
-        <Input name={PHONE_FIELD} type="text" placeholder="Telefone" maxLength={15} value={phone} onChange={handlePhoneChange} disabled={isSubmitting} />
+        <Input name="phone" type="text" placeholder="Telefone" maxLength={15} value={phone} onChange={handlePhoneChange} disabled={isSubmitting} />
       </FormGroup>
 
       <FormGroup isLoading={isLoadingCategories}>
