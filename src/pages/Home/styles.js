@@ -4,59 +4,6 @@ export const Container = styled.div`
   margin-top: 32px;
 `;
 
-export const InputSearchContainer = styled.form`
-  ${({ theme: { colors: { gray } } }) => css`
-    width: 100%;
-
-    input {
-      width: 100%;
-      background: #FFF;
-      border: none;
-      border-radius: 25px;
-      height: 50px;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.04);
-      outline: 0;
-      padding: 0 16px;
-
-      &::placeholder {
-        color: ${gray[200]};
-      }
-    }
-  `}
-`;
-
-export const Header = styled.header`
-  ${({ theme: { colors: { primary, gray } }, justifyContent }) => css`
-    display: flex;
-    align-items: center;
-    justify-content: ${justifyContent};
-    margin-top: 32px;
-    border-bottom: 2px solid ${gray[100]};
-    padding-bottom: 16px;
-
-    strong {
-      font-size: 24px;
-    }
-
-    a {
-      color: ${primary.main};
-      text-decoration: none;
-      font-weight: bold;
-      border: 2px solid ${primary.main};
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease-in;
-
-      &:hover {
-        background: ${primary.main};
-        color: #FFFFFF
-      }
-
-    }
-  `}
-`;
-
 export const ListHeader = styled.header`
   ${({ theme: { colors: { primary } }, orderBy }) => css`
     margin-top: 24px;
