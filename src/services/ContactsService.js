@@ -21,9 +21,10 @@ class ContactsService {
     return this.httpClient.post('/contacts', { body });
   }
 
-  updateContact(id, contact) {
+  async updateContact(id, contact) {
     const body = ContactMapper.toPersistence(contact);
-    return this.httpClient.put(`/contacts/${id}`, { body });
+    const contactData = await this.httpClient.put(`/contacts/${id}`, { body });
+    return ContactMapper.toDomain(contactData);
   }
 
   deleteContact(id) {
