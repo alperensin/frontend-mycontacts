@@ -11,18 +11,19 @@ import formatPhone from '../../utils/formatPhone';
 import useErrors from '../../hooks/useErrors';
 import { ButtonContainer } from './styles';
 import CategoriesService from '../../services/CategoriesService';
+import useSafeAsyncState from '../../hooks/useSafeAsyncState';
 
 const NAME_FIELD = 'name';
 const EMAIL_FIELD = 'email';
 const PHONE_FIELD = 'phone';
 
 const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useSafeAsyncState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [isLoadingCategories, setIsLoadingCategories] = useSafeAsyncState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -61,7 +62,7 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
     }
 
     loadCategories();
-  }, []);
+  }, [setCategories, setIsLoadingCategories]);
 
   function handleNameChange(event) {
     const { value, name: field } = event.target;
