@@ -1,5 +1,5 @@
 import {
-  useCallback, useEffect, useMemo, useState,
+  useCallback, useEffect, useState, startTransition,
 } from 'react';
 import ContactsService from '../../services/ContactsService';
 import toast from '../../utils/toast';
@@ -13,10 +13,11 @@ export default function useHome() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [contactBeingDeleted, setContactBeingDeleted] = useState(null);
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+  const [filteredContacts, setFilteredContacts] = useState([]);
 
-  const filteredContacts = useMemo(() => contacts.filter((contact) => (
-    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )), [contacts, searchTerm]);
+  // const filteredContacts = useMemo(() => contacts.filter((contact) => (
+  //   contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // )), [contacts, searchTerm]);
 
   const loadContacts = useCallback(async () => {
     try {
@@ -25,6 +26,7 @@ export default function useHome() {
 
       setHasError(false);
       setContacts(contactsList);
+      setFilteredContacts(contactsList);
     } catch {
       setHasError(true);
       setContacts([]);
@@ -40,20 +42,26 @@ export default function useHome() {
   function handleChangeSearchTerm(event) {
     const { value } = event.target;
     setSearchTerm(value);
+
+    startTransition(() => {
+      setFilteredContacts(contacts.filter((contact) => (
+        contact.name.toLowerCase().includes(value.toLowerCase())
+      )));
+    });
   }
 
-  function handleToggleOrderBy() {
+  const handleToggleOrderBy = useCallback(() => {
     setOrderBy((prevState) => (prevState === 'asc' ? 'desc' : 'asc'));
-  }
+  }, []);
 
   function handleTryAgain() {
     loadContacts();
   }
 
-  function handleDeleteContact(contact) {
+  const handleDeleteContact = useCallback((contact) => {
     setContactBeingDeleted(contact);
     setIsDeleteModalVisible(true);
-  }
+  }, []);
 
   function handleCloseDeleteModal() {
     setIsDeleteModalVisible(false);
