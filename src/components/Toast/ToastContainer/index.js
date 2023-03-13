@@ -5,6 +5,7 @@ import { Container } from './styles';
 
 export default function ToastContainer() {
   const [messages, setMessages] = useState([]);
+  const [pendingRemovalMessagesIds, setPendingRemovalMessagesIds] = useState([]);
 
   useEffect(() => {
     function handleAddToast({ type, text, duration }) {
@@ -23,7 +24,12 @@ export default function ToastContainer() {
   }, []);
 
   const handleRemoveMessage = useCallback((id) => {
+    setPendingRemovalMessagesIds((prevState) => [...prevState, id]);
+  }, []);
+
+  const handleAnimationEnd = useCallback((id) => {
     setMessages((prevState) => prevState.filter((message) => message.id !== id));
+    setPendingRemovalMessagesIds((prevState) => prevState.filter((messageId) => messageId !== id));
   }, []);
 
   return (
@@ -33,6 +39,8 @@ export default function ToastContainer() {
           key={message.id}
           message={message}
           onRemoveMessage={handleRemoveMessage}
+          onAnimationEnd={handleAnimationEnd}
+          isLeaving={pendingRemovalMessagesIds.includes(message.id)}
         />
       ))}
     </Container>
