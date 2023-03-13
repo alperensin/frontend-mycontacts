@@ -6,11 +6,10 @@ import { Container } from './styles';
 
 export default function ToastContainer() {
   const {
-    items: messages,
     setItems: setMessages,
-    pendingRemovalItemsIds,
     handleRemoveItem,
     handleAnimationEnd,
+    renderList,
   } = useAnimatedList([]);
 
   useEffect(() => {
@@ -31,13 +30,13 @@ export default function ToastContainer() {
 
   return (
     <Container>
-      {messages.map((message) => (
+      {renderList((message, { isLeaving }) => (
         <ToastMessage
           key={message.id}
           message={message}
           onRemoveMessage={handleRemoveItem}
           onAnimationEnd={handleAnimationEnd}
-          isLeaving={pendingRemovalItemsIds.includes(message.id)}
+          isLeaving={isLeaving}
         />
       ))}
     </Container>
