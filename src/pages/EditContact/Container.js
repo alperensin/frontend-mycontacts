@@ -15,15 +15,21 @@ export default function Container() {
   const safeAsyncAction = useSafeAsyncAction();
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadContact() {
       try {
-        const contact = await ContactsService.getContactById(id);
+        const contact = await ContactsService.getContactById(id, controller.signal);
         safeAsyncAction(() => {
           contactFormRef.current.setFieldsValues(contact);
           setContactName(contact.name);
           setIsLoading(false);
         });
       } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return;
+        }
+
         safeAsyncAction(() => {
           history.push('/');
           toast({ type: 'danger', text: 'Contato não encontrado!' });
@@ -32,6 +38,10 @@ export default function Container() {
     }
 
     loadContact();
+
+    return () => {
+      controller.abort();
+    };
   }, [id, history, safeAsyncAction]);
 
   async function handleSubmit(contact) {

@@ -6,8 +6,8 @@ class CategoriesService {
     this.httpClient = new HttpClient('http://192.168.50.102:3001');
   }
 
-  async listCategories(orderBy = 'asc') {
-    const categories = await this.httpClient.get(`/categories?orderBy=${orderBy}`);
+  async listCategories(orderBy, signal) {
+    const categories = await this.httpClient.get(`/categories?orderBy=${orderBy || 'asc'}`, { signal });
     return categories.map(CategoryMapper.toDomain);
   }
 }
