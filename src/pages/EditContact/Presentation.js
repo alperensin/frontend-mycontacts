@@ -4,7 +4,7 @@ import Loader from '../../components/Loader';
 import PageHeader from '../../components/PageHeader';
 
 export default function Presentation({
-  isLoading, contactName, contactFormRef, onSubmit,
+  isLoading = true, contactName, contactFormRef, onSubmit,
 }) {
   return (
     <>
@@ -20,8 +20,4 @@ Presentation.propTypes = {
   contactName: PropTypes.string.isRequired,
   contactFormRef: PropTypes.shape().isRequired,
   onSubmit: PropTypes.func.isRequired,
-};
-
-Presentation.defaultProps = {
-  isLoading: true,
 };
